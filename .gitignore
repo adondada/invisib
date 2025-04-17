@@ -1,0 +1,8 @@
+.env
+__pycache__/
+venv/
+uploads/
+pending/
+*.pyc
+*.db
+gunicorn.service

@@ -1,0 +1,232 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Invisib - Secure File Hosting</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<link rel="icon" type="image/x-icon" href="../static/favicon.ico">
+	<link rel="apple-touch-icon" type="image/x-icon" href="../static/favicon.ico">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+
+    <style>
+
+
+#copyBtn.copied {
+  background-color: #28a745 !important;
+  color: white;
+  transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+
+
+
+
+.progress-wrapper {
+  position: relative;
+  height: 24px;
+  width: 90%;
+  max-width: 500px;
+  background-color: #111;
+  border: 2px solid var(--neon-blue);
+  border-radius: 5px;
+  overflow: hidden;
+  margin: 1rem auto 0 auto;
+  box-shadow: var(--glow);
+}
+
+.progress-bar-fill {
+  position: absolute;
+  top: 0;
+  left: 0;
+  height: 100%;
+  width: 0%;
+  background-color: var(--neon-blue);
+  transition: width 0.3s ease;
+  z-index: 1;
+}
+
+.progress-bar-text {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 0.8rem;
+  color: white;
+  z-index: 2;
+  pointer-events: none;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+	
+
+
+
+
+
+
+	#fileLabel.selected {
+    background-color: var(--neon-blue);
+    color: black;
+    text-shadow: var(--glow);
+    border-color: var(--neon-blue);
+    box-shadow: inset 0 2px 4px rgba(0,0,0,0.4);
+}
+
+	.cf-turnstile {
+    transform: scale(1);  /* or whatever size works for your layout */
+/*   transform-origin: 0 0; */
+	transform-origin: center;
+	transition: transform 0.3s ease;
+	
+	 margin: 0 auto;
+  display: block;
+}
+
+	@media (max-width: 480px) and (orientation: portrait) {
+    .cf-turnstile {
+        transform: scale(0.74);
+    }
+}
+
+	.captcha {
+    max-width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    padding: 10px;
+    overflow: hidden;
+}
+
+	.logo-img {
+  background: transparent !important;
+  /* Remove any shadow or border */
+  box-shadow: none !important;
+  border: none !important;
+
+}	
+
+        :root {
+            --cyber-blue: #0d1b2a;
+            --neon-blue: #00f0ff;
+            --glow: 0 0 10px var(--neon-blue);
+        }
+
+        body {
+            background-color: #0d0d0d;
+            color: white;
+            font-family: 'Courier New', monospace;
+            margin: 0;
+            padding: 0;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+
+        .navbar {
+            background-color: var(--cyber-blue) !important;
+            border-bottom: 1px solid var(--neon-blue);
+            box-shadow: var(--glow);
+        }
+
+        .btn-outline-light {
+            border-color: var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .btn-outline-light:hover {
+            background-color: var(--neon-blue);
+            color: black;
+            text-shadow: var(--glow);
+        }
+
+        .btn-neon {
+            background-color: transparent;
+            border: 1px solid var(--neon-blue);
+            color: var(--neon-blue);
+        }
+
+        .btn-neon:hover {
+            background-color: var(--neon-blue);
+            color: black;
+            text-shadow: var(--glow);
+        }
+
+        @keyframes glitch {
+            0% { text-shadow: var(--glow); }
+            25% { text-shadow: -2px 0 #ff00ff, 2px 0 var(--neon-blue); }
+            50% { text-shadow: 2px 0 #ff00ff, -2px 0 var(--neon-blue); }
+            100% { text-shadow: var(--glow); }
+        }
+
+        .glitch-effect {
+            animation: glitch 2s infinite alternate;
+        }
+
+        .border-neon {
+            border: 2px solid var(--neon-blue) !important;
+            box-shadow: var(--glow);
+        }
+
+        .content-wrapper {
+            flex: 1;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            padding: 2rem;
+        }
+
+        .glass-box {
+            background-color: rgba(13, 27, 42, 0.8);
+            border-radius: 1rem;
+            padding: 2rem;
+            max-width: 600px;
+            width: 100%;
+	background-color: transparent;      
+      text-align: center;
+        }
+
+        .logo-img {
+            max-width: 250px;
+            margin-bottom: 1rem;
+	background: repeating-conic-gradient(#444 0% 25%, #666 0% 50%) 50% / 12px 12px; 
+           filter: drop-shadow(var(--glow));
+        }
+
+        @media (max-width: 768px) {
+            .glass-box {
+                padding: 1.5rem;
+            }
+
+            .logo-img {
+                max-width: 150px;
+            }
+        }
+    </style>
+</head>
+<body>
+    {% block content %}{% endblock %}
+
+    <div class="container mt-5 text-center">
+        <div class="card bg-dark border-neon p-4">
+            <h5 class="glitch-effect">Support Us (SOL)</h5>
+            <p>SOL <code>BX2UQGSQyMwq6FiTPFkxSkE1aXXybMpxrae854mTvxvz</code></p>
+	<p style="color:White;">Your donations keep this free, up and working and ad-free</p>
+        </div>
+
+    </div>
+
+<center><p>full privacy policies, GDPR, etc on <a href="/policies">policies</a></p></center>
+</body>
+</html>

@@ -1,0 +1,156 @@
+import os
+import uuid
+import requests
+from flask import Blueprint, render_template, request, redirect, send_from_directory, session, current_app, url_for, flash
+from utils import login_required, is_image, find_file_by_id
+
+
+views_bp = Blueprint("views", __name__)
+UPLOAD_DIR = "uploads"
+PENDING_DIR = "pending"
+
+os.makedirs(UPLOAD_DIR, exist_ok=True)
+os.makedirs(PENDING_DIR, exist_ok=True)
+
+@views_bp.route("/")
+def home():
+    return render_template("home.html")
+
+@views_bp.route("/upload", methods=["POST"])
+def upload():
+    # Verify reCAPTCHA
+    captcha_response = request.form.get('g-recaptcha-response')
+    if not captcha_response:
+        return "Please complete the CAPTCHA", 400
+        
+    secret_key = current_app.config['RECAPTCHA_SECRET_KEY']
+    verify_url = "https://www.google.com/recaptcha/api/siteverify"
+    payload = {
+        'secret': secret_key,
+        'response': captcha_response
+    }
+    response = requests.post(verify_url, data=payload).json()
+    
+    if not response.get('success'):
+        return "CAPTCHA verification failed", 400
+
+    # File upload logic
+    file = request.files.get("file")
+    if not file:
+        return "No file", 400
+        
+    if file.content_length > 10 * 1024 * 1024:  # 10MB limit
+        return "File too large (max 10MB)", 400
+        
+    file_id = uuid.uuid4().hex[:8]
+    ext = os.path.splitext(file.filename)[1]
+    file.save(os.path.join(PENDING_DIR, file_id + ext))
+    session['last_uploaded'] = file_id
+    return redirect("/upload_success")
+
+#	file_id = uuid.uuid4().hex[:8]
+#	ext = os.path.splitext(file.filename)[1]
+#	filename = file_id + ext
+#	file.save(os.path.join(PENDING_DIR, filename))
+#	session['last_uploaded'] = file_id  # 🔁 still save just ID (not filename)
+#	session['last_ext'] = ext           # 🔁 save extension separately
+#	return redirect("/upload_success")
+
+
+#file_id = uuid.uuid4().hex[:8]
+#ext = os.path.splitext(file.filename)[1]
+#filename = file_id + ext
+#file.save(os.path.join(PENDING_DIR, filename))
+#session['last_uploaded'] = filename  # <-- this is what was missing
+#return redirect("/upload_success")
+
+#@views_bp.route("/upload_success")
+#def upload_success():
+ #   return render_template("home.html", uploaded=session.pop("last_uploaded", None))
+
+
+
+
+@views_bp.route("/upload_success")
+def upload_success():
+    file_id = session.pop("last_uploaded", None)
+    if not file_id:
+        return redirect("/")
+    
+    # Manually reconstruct the full filename from disk
+    for fname in os.listdir(PENDING_DIR):
+        if fname.startswith(file_id):
+            filename = fname
+            break
+    else:
+        return redirect("/")
+
+    return render_template("home.html", uploaded=filename, is_image=is_image(filename))
+
+
+
+
+#@views_bp.route("/upload_success")
+#def upload_success():
+ #   uploaded = session.pop("last_uploaded", None)
+  #  if not uploaded:
+   #     return redirect("/")
+    #return render_template("home.html", uploaded=uploaded, is_image=is_image(uploaded))
+
+
+#@views_bp.route("/upload_success")
+#def upload_success():
+   # file_id = session.pop("last_uploaded", None)
+ #   ext = session.pop("last_ext", "")
+  #  if not file_id:
+   #     return redirect("/")
+  #  filename = file_id + ext
+ #   return render_template("home.html", uploaded=filename, is_image=is_image(filename))
+
+
+
+
+@views_bp.route("/view/<file_id>")
+def view_file(file_id):
+    folder, filename = find_file_by_id(file_id)
+    if not filename:
+        return render_template("view.html", not_found=True)
+    return render_template("view.html", 
+                         file_id=file_id, 
+                         is_image=is_image(filename), 
+                         folder=folder, 
+                         filename=filename)
+
+@views_bp.route("/file/<folder>/<filename>")
+def serve_file(folder, filename):
+    if folder not in ["uploads", "pending"]:
+        return "Forbidden", 403
+    return send_from_directory(folder, filename)
+
+@views_bp.route("/moderate")
+@login_required
+def moderate():
+    files = os.listdir("pending")
+    return render_template("moderate.html", files=files)
+
+@views_bp.route("/approve/<file_id>")
+@login_required
+def approve(file_id):
+    folder, filename = find_file_by_id(file_id)
+    if folder:
+        os.rename(os.path.join(folder, filename), os.path.join(UPLOAD_DIR, filename))
+    return redirect("/moderate")
+
+@views_bp.route("/delete/<file_id>")
+@login_required
+def delete(file_id):
+    folder, filename = find_file_by_id(file_id)
+    if folder:
+        os.remove(os.path.join(folder, filename))
+    return redirect("/moderate")
+
+@views_bp.route("/faq")
+def faq():
+    return render_template("faq.html")
+
+

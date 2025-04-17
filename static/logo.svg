@@ -1,0 +1,10 @@
+<svg width="128" height="128" viewBox="0 0 128 128" xmlns="http://www.w3.org/2000/svg">
+  <rect width="128" height="128" fill="none"/>
+  <g>
+    <!-- Folder shape -->
+    <path d="M20 40h88v60H20z" fill="#000" rx="5" ry="5"/>
+    <!-- Padlock -->
+    <rect x="76" y="75" width="20" height="18" rx="3" fill="#000"/>
+    <path d="M80 75v-6a6 6 0 0 1 12 0v6" fill="none" stroke="#000" stroke-width="2"/>
+  </g>
+</svg>

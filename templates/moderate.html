@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container text-center mt-5">
+    <h1 class="glitch-effect mb-4">Moderation Panel</h1>
+    
+    <!-- Logout button that sends POST request -->
+    <form method="POST" action="/logout" class="mb-4">
+        <button type="submit" class="btn btn-outline-light glitch-effect">Logout</button>
+    </form>
+    
+
+<ul class="list-group bg-dark">
+  {% for f in files %}
+    <li class="list-group-item d-flex justify-content-between align-items-center bg-dark text-light border-neon flex-column flex-md-row text-center text-md-start">
+      <div class="w-100 mb-2 mb-md-0">
+        <span class="glitch-effect d-block d-md-inline">{{ f.name }}</span>
+	<small class="text-white-50 d-block d-md-none">{{ f.date_str }} at {{ f.time_str }}</small>
+
+      </div>
+      <div class="text-nowrap">
+	<small class="text-white-50 me-3 d-none d-md-inline">{{ f.date_str }} {{ f.time_str }}</small>
+
+
+        <a href="/view/{{ f.name.split('.')[0] }}" class="btn btn-sm btn-outline-light me-2">View</a>
+        <a href="/approve/{{ f.name.split('.')[0] }}" class="btn btn-sm btn-outline-success me-2">Approve</a>
+        <a href="/delete/{{ f.name.split('.')[0] }}" class="btn btn-sm btn-outline-danger">Delete</a>
+      </div>
+    </li>
+  {% endfor %}
+</ul>
+
+
+</div>
+{% endblock %}

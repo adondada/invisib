@@ -1,0 +1,22 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container text-center mt-5">
+    {% if not_found %}
+        <div class="alert alert-danger glitch-effect">File not found.</div>
+    {% else %}
+        <h1 class="glitch-effect mb-4">File Preview</h1>
+        {% if is_image %}
+            <img src="/file/{{ folder }}/{{ filename }}" class="img-fluid mb-3 border-neon" style="max-width: 100%; max-height: 300px;">
+        {% endif %}
+        <a href="/file/{{ folder }}/{{ filename }}" download class="btn btn-outline-success mb-2 glitch-effect">Download</a>
+         
+        <a href="/file/{{ folder }}/{{ filename }}" target="_blank"
+   class="btn btn-outline-info mb-2 glitch-effect">
+   Direct File URL
+</a>
+
+         
+       <p class="mt-2"><strong>Status:</strong> {{ "Approved" if folder == "uploads" else "Pending" }}</p>
+    {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="glass-box border-neon">
+        <img src="{{ url_for('static', filename='logo.png') }}" class="logo-img" alt="Logo">
+        <h1 class="glitch-effect">404 – Page Not Found</h1>
+        <p class="mt-3">The page you're looking for doesn't exist or has been moved.</p>
+        <a href="/" class="btn btn-neon mt-4">Go Back Home</a>
+    </div>
+</div>
+{% endblock %}

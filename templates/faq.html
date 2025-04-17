@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="glass-box border-neon">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-img">
+
+        <h1 class="glitch-effect mb-3">SECURE UPLOAD</h1>
+        <p class="mb-3">Encrypted. Anonymous. Fast.<br>Max file size: 10MB</p>
+
+        <p class="mb-4">
+            Your files are safe with us. Fully encrypted transfers over HTTPS.<br>
+            No tracking. No logs. Just secure storage.
+        </p>
+
+        <hr class="border-neon my-4">
+
+        <h5 class="mb-2 glitch-effect">FAQ (Frequently Asked Questions)</h5>
+        
+
+        <ul class="text-start mt-3">
+            <li><strong>Is it really anonymous?</strong> — Yes. No IP logging, no cookies.</li>
+            <li><strong>What is the file retention policy?</strong> — Files pending approval are temporary.</li>
+            <li><strong>Are uploads encrypted?</strong> — All traffic is HTTPS-encrypted, and files are stored in isolated folders.</li>
+        </ul>
+    </div>
+</div>
+{% endblock %}

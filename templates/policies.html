@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-wrapper">
+    <div class="glass-box border-neon">
+        <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-img">
+
+        <h1 class="glitch-effect mb-3">SECURE UPLOAD</h1>
+        <p class="mb-3">Encrypted. Anonymous. Fast.<br>Max file size: 10MB</p>
+
+        <p class="mb-4">
+            Your files are safe with us. Fully encrypted transfers over HTTPS.<br>
+            No tracking. No logs. Just secure storage.
+        </p>
+
+        <hr class="border-neon my-4">
+
+        <h5 class="mb-2 glitch-effect">TERMS</h5>
+        <p>Privacy Policy</p>
+
+        <ul class="text-start mt-3">
+            <li><strong>Privacy Policy</strong> - <pre>
+## Data Collection  
+
+Invisib.xyz is designed to store **zero user data**. Specifically:  
+
+- We **do not log IP addresses**  
+
+- We **do not use cookies** for visitors (a session cookie exists only for moderator login
+while also Cloudflare may set a temporary 'cf_clearance' cookie for security checks. This cookie is not controlled. It expires in 24h.
+
+- Uploaded files are **automatically anonymized** (original filenames removed)  
+
+- Cloudflare is used in the backend, for DDOS and bot protection, CSAM protection, which MAY process visitor IP temporarily to block threats. 
+
+- Turnstile captcha is used to prevent IP collection and cookie creation.
+
+## GDPR Compliance  
+
+Since no personal data is collected:  
+
+- No user data exists to access, modify, or delete  
+
+- No consent banners are shown (no tracking)  
+
+
+
+Contact: report@invisib.xyz</pre>  
+</li>
+            <li><strong>Terms of Service</strong> — <pre>
+## Acceptable Use  
+
+You agree **not** to upload:  
+
+- Illegal content (e.g., malware, CSAM)  
+
+- Copyrighted material (without permission)  
+
+- Harmful or abusive files  
+
+
+
+## Our Rights  
+
+- Files may be **deleted without notice**  
+
+- We **cooperate with legal requests** but retain no identifiable data to provide  
+
+
+
+## Abuse Reports  
+
+Email report@invisib.xyz with:  
+
+1. File URL  
+
+2. Reason for report (e.g., DMCA, illegal content)  
+</pre></li>
+            <li><strong>Implementation Notes</strong> — <pre>
+1. **No cookie banner** (your only cookie is for admin access).  
+
+2. **No complex legalese** (GDPR compliance achieved via transparency).  
+
+3. **DMCA-ready** (abuse email suffices for U.S. law).  
+
+
+</pre></li>
+
+## Data Controller  
+
+<p>Invisib, operating under Greek jurisdiction, acts as data controller. No processing occurs.  
+</p>
+        </ul>
+    </div>
+</div>
+{% endblock %}
