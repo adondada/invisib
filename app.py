@@ -27,7 +27,7 @@ app.config['TURNSTILE_SECRET_KEY'] = os.environ.get("TURNSTILE_SECRET_KEY")
 app.register_blueprint(auth_bp)
 app.register_blueprint(views_bp)
 
-app.config['MAX_CONTENT_LENGTH'] = 10 * 1024 * 1024
+app.config['MAX_CONTENT_LENGTH'] = 100 * 1024 * 1024
 
 if __name__ == "__main__":
     # Make Flask accessible externally and use port 80

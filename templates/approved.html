@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container text-center mt-5">
+  <h2 class="glitch-effect mb-4">Approved Files</h2>
+<div class="d-flex justify-content-between mb-3">
+  <a href="/moderate" class="btn btn-outline-secondary">← Back to Moderate</a>
+  <a href="/logout" class="btn btn-outline-danger">Logout</a>
+</div>
+  {% for file in files %}
+    <div class="border-neon p-2 mb-3">
+      <div class="mb-1 text-white small">{{ file }}</div>
+      <a href="/view/{{ file.split('.')[0] }}" class="btn btn-sm btn-outline-info">View</a>
+      <a href="/delete/{{ file.split('.')[0] }}" class="btn btn-sm btn-outline-danger">Delete</a>
+    </div>
+  {% else %}
+    <div class="alert alert-dark">No approved files yet.</div>
+  {% endfor %}
+</div>
+{% endblock %}

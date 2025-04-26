@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="content-wrapper">
+<div class="glass-box border-neon">
+<img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-img" >
+
+<h1 class="glitch-effect mb-3">SECURE UPLOAD</h1>
+<p class="mb-3">Encrypted. Anonymous. Fast.<br>Max file size: 10MB<>
+
+<p class="mb-4">
+Your files are safe with us. Fully encrypted transfers over HTT>
+No tracking. No logs. Just secure storage.
+</p>
+
+<hr class="border-neon my-4">
+
+<h5 class="mb-2 glitch-effect">Changelog</h5>
+
+
+<ul class="text-start mt-3">
+<li><pre>
+•	Added file upload support with Google reCAPTCHA
+•	File previews implemented for images (/view/<id>)
+•	Session system added for showing last uploaded file
+•	Drag & drop file selection added with label update
+•	Hidden progress bar added with real-time % tracking
+•	Converted from reCAPTCHA to Cloudflare Turnstile (privacy-friendly)
+•	Verified Turnstile works with desktop + mobile scaling
+•	Verified session only stores last file ID temporarily
+•	Made Flask auto-delete empty session cookies for clean privacy
+•	Built success banner with file link + optional image preview
+•	Added “Copy to Clipboard” icon for uploaded file links
+•	Added “Preview” + “Direct File URL” buttons after upload
+•	Created responsive moderator panel, sorted by newest file
+•	Displayed upload date + time (styled for mobile/desktop)
+•	Ensured .env is safe for GitHub (moved secrets to .env.example)
+•	Improved upload UX: fixed upload button bugs + drag behavior
+•	Cleaned up unnecessary &lt;div>s (in progress)
+•	Fixed video &lt;video> preview support in /view/&lt;id>
+•	Added OpenGraph &lt;meta> tags to support link previews
+•	Ensured Discord can embed media from /view/&lt;id> (images + videos)
+•	Fixed Content-Type and Range headers via send_file(...)
+•	Discord embeds now work without using .mp4 links</pre>
+</ul>
+</div>
+</div>
+{% endblock %}

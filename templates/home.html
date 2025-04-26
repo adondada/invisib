@@ -5,14 +5,14 @@
         <img src="{{ url_for('static', filename='logo.png') }}" alt="Logo" class="logo-img">
         
         <h1 class="glitch-effect mb-3">SECURE UPLOAD</h1>
-        <p class="mb-3">Encrypted. Anonymous. Fast.<br>Max file size: 10MB (more soon)</p>
+        <p class="mb-3">Encrypted. Anonymous. Fast.<br>Max file size: 100MB (previous 10MB)</p>
 
         <p class="mb-4">Your files are safe with us. Fully encrypted transfers over HTTPS.<br>
         NO tracking. NO IPs. NO logs. Just secure storage.</p>
 <p class="mb-4">No names are held, new filenames are created</p>
         <p class="mb-4">Your files will stay forever online.</p>
         <p class="mb-4">Please read the <a href="/faq" style="color: red;">FAQ</a></p>
-
+	<p class="mb-4">Also check the <a href="/changelog" style="color: red;">changelog</a></p>
 	<p class="mb-4">Report/Suggest: <a href="mailto:report@invisib.xyz" style="color: red;">report@invisib.xyz</a></p>
 
         <div class="upload-frame p-4 mb-3 border-neon" style="border-style: dashed;">
@@ -195,7 +195,7 @@ const progressWrapper = document.getElementById('progressWrapper');
 const progressText = document.getElementById('progressText');
 const progressFill = document.getElementById('progressFill');
 
-const maxSizeMB = 10;  // ✅ Easy to change limit later
+const maxSizeMB = 100;  // ✅ Easy to change limit later
 
 fileInput.addEventListener('change', () => {
     const file = fileInput.files[0];
@@ -317,7 +317,10 @@ const progressWrapper = document.getElementById('progressWrapper');
 const progressFill = document.getElementById('progressFill');
 const progressText = document.getElementById('progressText');
 const successBanner = document.getElementById('successBanner');
-const maxSizeMB = 10;
+const maxSizeMB = 100;
+
+let lastPercent = 0;
+const minUploadTime = 2000; // Minimum 2 seconds to reach 95%
 
 fileInput.addEventListener('change', () => {
   if (fileInput.files.length > 0) {
@@ -352,31 +355,51 @@ formData.append("cf-turnstile-response", turnstileToken);
   const xhr = new XMLHttpRequest();
   xhr.open("POST", "/upload");
 
-  xhr.upload.addEventListener("progress", function(e) {
-    if (e.lengthComputable) {
-      const percent = Math.round((e.loaded / e.total) * 100);
-      progressWrapper.classList.remove('d-none');
-      progressFill.style.width = percent + "%";
-      progressText.textContent = percent + "%";
-      if (percent >= 50) {
-        progressFill.style.backgroundColor = "#00ffaa";
-      }
-    }
-  });
 
-  xhr.onload = function () {
-    if (xhr.status === 200) {
-      const res = JSON.parse(xhr.responseText);
-      showBanner(res);
-      grecaptcha.reset();
-      form.reset();
-      fileLabel.textContent = "SELECT FILE";
-      fileLabel.classList.remove('selected');
-      progressFill.style.width = "100%";
-    } else {
-      alert("Upload failed.");
+// Add this at the top of your script (before the XHR code)
+
+// Replace the progress event listener with this:
+xhr.upload.addEventListener("progress", function(e) {
+  if (e.lengthComputable) {
+    const now = Date.now();
+    const elapsed = now - startTime;
+    const realPercent = (e.loaded / e.total) * 100;
+    
+    // Blend real progress with minimum time enforcement
+    const timeBasedPercent = Math.min(95, (elapsed / minUploadTime) * 95);
+    const displayPercent = Math.max(lastPercent, Math.min(realPercent, timeBasedPercent));
+    
+    progressFill.style.width = displayPercent + "%";
+    progressText.textContent = Math.floor(displayPercent) + "%";
+    lastPercent = displayPercent;
+    
+    if (displayPercent >= 50) {
+      progressFill.style.backgroundColor = "#00ffaa";
     }
-  };
+  }
+});
+
+// Add this right before xhr.send():
+
+xhr.onload = function () {
+  if (xhr.status === 200) {
+    progressFill.style.width = "100%";  // Force 100% on success
+    progressText.textContent = "100%";
+    
+    const res = JSON.parse(xhr.responseText);
+    showBanner(res);
+    grecaptcha.reset();
+    form.reset();
+    fileLabel.textContent = "SELECT FILE";
+    fileLabel.classList.remove('selected');
+  } else {
+    alert("Upload failed.");  // Keep your original alert
+  }
+};
+
+
+const startTime = Date.now();
+progressWrapper.classList.remove('d-none');  // Show progress bar
 
   xhr.send(formData);
 });

@@ -43,14 +43,20 @@ def upload():
     if not file:
         return {"error": "No file"}, 400
 
-    if file.content_length > 10 * 1024 * 1024:
+    if file.content_length > 100 * 1024 * 1024:
         return {"error": "Too large"}, 400
 
     file_id = uuid.uuid4().hex[:8]
     ext = os.path.splitext(file.filename)[1]
     filename = file_id + ext
 
-    file.save(os.path.join("pending", filename))
+    with open(os.path.join("pending", filename), 'wb') as f:
+        while True:
+            chunk = file.stream.read(1024*1024)  # 1MB chunks
+            if not chunk:
+                break
+            f.write(chunk)
+            time.sleep(0.01)  # 10ms delay per MB
 
     return {
         "file_id": file_id,
@@ -150,7 +156,8 @@ def delete(file_id):
     folder, filename = find_file_by_id(file_id)
     if folder:
         os.remove(os.path.join(folder, filename))
-    return redirect("/moderate")
+    referer = request.headers.get("Referer", "/moderate")
+    return redirect(referer)
 
 @views_bp.route("/faq")
 def faq():
@@ -160,3 +167,17 @@ def faq():
 @views_bp.route("/policies")
 def policies():
 	return render_template("policies.html")
+
+@views_bp.route("/changelog")
+def changelog():
+	return render_template("changelog.html")
+
+@views_bp.route("/approved")
+@login_required
+def approved():
+    files = sorted(
+        os.listdir(UPLOAD_DIR),
+        key=lambda f: os.path.getctime(os.path.join(UPLOAD_DIR, f)),
+        reverse=True  # newest first
+    )
+    return render_template("approved.html", files=files)

@@ -1,4 +1,23 @@
 {% extends "base.html" %}
+
+{% block head %}
+  {{ super() }}
+  {% if filename %}
+    <!-- Basic Open Graph -->
+    <meta property="og:title" content="File from Invisib.xyz">
+    <meta property="og:url" content="https://invisib.xyz/view/{{ file_id }}">
+    
+    <!-- Dynamic Content -->
+    {% if is_image %}
+      <meta property="og:type" content="image">
+      <meta property="og:image" content="https://invisib.xyz/file/{{ folder }}/{{ filename }}">
+    {% elif filename.endswith(('.mp4', '.webm')) %}
+      <meta property="og:type" content="video.other">
+      <meta property="og:video" content="https://invisib.xyz/file/{{ folder }}/{{ filename }}">
+      <meta property="og:video:type" content="video/{{ filename.split('.')[-1] }}">
+    {% endif %}
+  {% endif %}
+{% endblock %}
 {% block content %}
 <div class="container text-center mt-5">
     {% if not_found %}
@@ -7,6 +26,11 @@
         <h1 class="glitch-effect mb-4">File Preview</h1>
         {% if is_image %}
             <img src="/file/{{ folder }}/{{ filename }}" class="img-fluid mb-3 border-neon" style="max-width: 100%; max-height: 300px;">
+	{% elif filename.endswith('.mp4') or filename.endswith('.webm') %}
+    <video controls class="mb-3 border-neon" style="max-width: 100%; max-height: 300px;">
+        <source src="/file/{{ folder }}/{{ filename }}" type="video/{{ filename.split('.')[-1] }}">
+        Your browser does not support the video tag.
+    </video>
         {% endif %}
         <a href="/file/{{ folder }}/{{ filename }}" download class="btn btn-outline-success mb-2 glitch-effect">Download</a>
          
