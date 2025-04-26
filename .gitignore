@@ -6,3 +6,7 @@ pending/
 *.pyc
 *.db
 gunicorn.service
+# Editor and backup files
+*.swp
+*.bak
+*.bak*
